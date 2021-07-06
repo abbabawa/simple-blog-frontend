@@ -1,8 +1,13 @@
-# Getting Started with Create React App
+# Simple Blog Frontend using React
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This is a simple Blog intended to demonstrate the use of react in frontend development
 
-## Available Scripts
+## Features
+    -Functional components
+    -Fetching data from remote api
+    -useState Hook
+    -useEffect Hook
+    -Routing
 
 In the project directory, you can run:
 
