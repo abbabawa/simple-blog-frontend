@@ -1,17 +1,17 @@
-import {Link} from 'react-router-dom'
+import {NavLink} from 'react-router-dom'
 
 function SideBar(){
     return (
         
             <ul class="nav flex-column mt-5 mx-auto">
-                <li class="nav-item">
-                    <Link class="nav-link active" aria-current="page" to="/articles">Articles</Link>
+                <li class="nav-item" key="1">
+                    <NavLink class="nav-link active" aria-current="page" to="/" exact>Articles</NavLink>
                 </li>
-                <li class="nav-item">
-                    <Link class="nav-link" to="/categories">Categories</Link>
+                <li class="nav-item" key="2">
+                    < NavLink class="nav-link" to="/categories" >Categories</NavLink>
                 </li>
-                <li class="nav-item">
-                    <Link class="nav-link" to="/authors">Authors</Link>
+                <li class="nav-item" key="3">
+                    <NavLink class="nav-link" to="/authors" >Authors</NavLink>
                 </li>
             </ul>
     )

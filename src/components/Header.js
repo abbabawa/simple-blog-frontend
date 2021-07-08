@@ -1,4 +1,4 @@
-
+import {NavLink} from 'react-router-dom'
 
 function Header(){
     return (
@@ -11,10 +11,10 @@ function Header(){
                 <div className="collapse navbar-collapse " id="navbarNavDropdown">
                     <ul className="navbar-nav  ms-auto">
                         <li className="nav-item">
-                            <a className="nav-link active" aria-current="page" href="#">Login</a>
+                            <NavLink class="nav-link" to="/login">Login</NavLink>
                         </li>
                         <li className="nav-item">
-                            <a className="nav-link" href="#">Register</a>
+                            <NavLink class="nav-link" to="/register">Register</NavLink>
                         </li>
                     </ul>
                 </div>
