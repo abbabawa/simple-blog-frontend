@@ -1,19 +1,35 @@
 import {NavLink} from 'react-router-dom'
+import { Nav } from 'react-bootstrap'
+import { NavDropdown } from 'react-bootstrap'
 
-function SideBar(){
+function SideBar(props){console.log(props.categories)
+    let cats = []
     return (
-        
-            <ul class="nav flex-column mt-5 mx-auto">
-                <li class="nav-item" key="1">
-                    <NavLink class="nav-link active" aria-current="page" to="/" exact>Articles</NavLink>
-                </li>
-                <li class="nav-item" key="2">
-                    < NavLink class="nav-link" to="/categories" >Categories</NavLink>
-                </li>
-                <li class="nav-item" key="3">
-                    <NavLink class="nav-link" to="/authors" >Authors</NavLink>
-                </li>
-            </ul>
+            <Nav variant="pills" activeKey="1" className="mt-5 ms-4 flex-column">
+                <Nav.Item>
+                    <Nav.Link eventKey="1" href="/">
+                        Articles
+                    </Nav.Link>
+                </Nav.Item>
+                <Nav.Item>
+                    <Nav.Link eventKey="2" title="Item">
+                        Authors
+                    </Nav.Link>
+                </Nav.Item>
+                <NavDropdown title="Categories" id="nav-dropdown">
+                    {
+                        props.categories.map(category=>{
+                            return <NavDropdown.Item>{category.name}</NavDropdown.Item>
+                        })
+                    }
+                    
+                    {/* <NavDropdown.Item eventKey="4.1">Action</NavDropdown.Item>
+                    <NavDropdown.Item eventKey="4.2">Another action</NavDropdown.Item>
+                    <NavDropdown.Item eventKey="4.3">Something else here</NavDropdown.Item>
+                    <NavDropdown.Divider />
+                    <NavDropdown.Item eventKey="4.4">Separated link</NavDropdown.Item> */}
+                </NavDropdown>
+            </Nav>
     )
 }
 

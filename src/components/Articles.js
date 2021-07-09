@@ -1,41 +1,37 @@
-import {Link} from 'react-router-dom'
+import {NavLink} from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import {Card, Button} from 'react-bootstrap'
 
-function Articles(){
+function Articles(props){
+    let articles = props.articles
+
     return (
         <div className="row">
             <div className="offset-md-4 mt-3 mb-5">
                 <h1 className="">Latest articles</h1>
             </div>
-            <div className="col-md-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                        <Link href="#" class="card-link">Card link</Link>
-                        <Link href="#" class="card-link">Another link</Link>
-                    </div>
-                </div>
-            </div>
-            <div className="col-md-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                        <Link href="#" class="card-link">Card link</Link>
-                        <Link href="#" class="card-link">Another link</Link>
-                    </div>
-                </div>
-            </div>
-            <div className="col-md-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                        <Link href="#" class="card-link">Card link</Link>
-                        <Link href="#" class="card-link">Another link</Link>
-                    </div>
-                </div>
-            </div>
+            {
+                articles.map(article=>{
+                    return (
+                        <div className="col-md-4">
+                            <NavLink to={'/article/'+article._id}>
+                                <Card>
+                                    <Card.Header>
+                                        <Card.Title>{article.title}</Card.Title>
+                                    </Card.Header>
+                                    <Card.Body>
+                                        
+                                        <Card.Text>
+                                            {article.details[0]}
+                                        </Card.Text>
+                                        {/* <Button variant="primary">Go somewhere</Button> */}
+                                    </Card.Body>
+                                </Card>
+                            </NavLink>
+                        </div>
+                    )
+                })
+            }
         </div>
     )
 }
