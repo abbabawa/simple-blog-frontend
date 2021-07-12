@@ -10,7 +10,7 @@ import { Route, Switch } from 'react-router';
 import Login from './components/Login'
 import Register from './components/Register'
 
-import {useHistory} from 'react-router-dom'
+import {useHistory, useParams} from 'react-router-dom'
 
 const headers = {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*',
                     'Access-Control-Allow-Methods': 'POST',}
@@ -51,7 +51,7 @@ const makeGetRequest = async (url)=>{
 const testGet = async (url)=>{
     return new Promise((resolve, reject)=>{
 		fetch(url).then((response) =>(
-				response.json().then((res)=>{console.log(res);
+				response.text().then((res)=>{console.log(res);
 					resolve(res)
 				}))
 		).catch(err=>{console.log(err)
@@ -79,19 +79,20 @@ function App(){
        }
     }
 
-    const [articles, setArticles] = useState([])
-    useEffect(()=>{
-        makeGetRequest('/articles').then(res=>{setArticles(res)})
-        //setArticles(res)
-    }, [])
-
-    const getArticle = async (article)=>{//console.log(articles)
-        let res = articles.find(val=>{return val._id === article})
-        if(!res){
+    const getArticle = async (article)=>{
             return makeGetRequest('/article/'+article)
+    }
+
+    const getArticles = async (category)=>{//console.log(articles)
+        if(category){
+            return makeGetRequest('/articles/'+category)
         }else{
-            return res
+            return makeGetRequest('/articles')
         }
+    }
+
+    const changeCategory = (e)=>{
+
     }
 
     return (
@@ -113,8 +114,11 @@ function App(){
                         <Route path="/authors">
                             <Author />
                         </Route>
+                        <Route exact path="/articles/:category">
+                            <Articles articles={getArticles} />
+                        </Route>
                         <Route exact path="/">
-                            <Articles articles={articles} />
+                            <Articles articles={getArticles} />
                         </Route>
                         <Route path="/login">
                             <Login login={login} />

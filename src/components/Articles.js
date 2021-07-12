@@ -1,9 +1,24 @@
 import {NavLink} from 'react-router-dom'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import {Card, Button} from 'react-bootstrap'
+import { useParams } from 'react-router'
 
-function Articles(props){
-    let articles = props.articles
+function Articles(props){console.log(useParams())
+    //useRef used to get previous value of category in order to refresh article component if category changes
+    let prevCat = useRef()
+    
+    const [articles, setArticles] = useState([])
+    const [category, setCategory] = useState(useParams().category)
+    
+    prevCat.current = useParams().category
+    if(prevCat.current !== category){
+        setCategory(prevCat.current)
+    }
+    useEffect(()=>{console.log("useEffect")
+        props.articles(category).then(res=>{setArticles(res)})
+        //prevCat.current = category
+        //setArticles(res)
+    }, [category])
 
     return (
         <div className="row">
