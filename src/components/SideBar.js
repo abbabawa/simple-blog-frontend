@@ -3,6 +3,9 @@ import { Nav } from 'react-bootstrap'
 import { NavDropdown } from 'react-bootstrap'
 import { useParams } from 'react-router'
 
+import User from '../User'
+import { useState, useEffect } from 'react'
+
 const links = [
     {
       id: 1,
@@ -18,7 +21,11 @@ const links = [
 
   let i = 3
 
-function SideBar(props){console.log(props.categories)
+function SideBar(props){
+    const [userDetails, setUserDetails] = useState({id: User.getId(), name: User.getName()})
+    // useEffect(()=>{
+    //     setUserDetails({id: User.getId(), name: User.getName()})
+    // }, [userDetails])
     let cats = []
     let category = useParams()
     if(props.categories){
@@ -40,7 +47,7 @@ function SideBar(props){console.log(props.categories)
                     { 
                         cats.map(category=>{
                             return <NavDropdown.Item>
-                                        <NavLink eventKey={i = (i + 1)} to={"/articles/"+category._id}>{category.name}</NavLink>
+                                        <NavLink key={i = (i + 1)} to={"/articles/"+category._id}>{category.name}</NavLink>
                                     </NavDropdown.Item>
                         })
                     }
@@ -51,6 +58,20 @@ function SideBar(props){console.log(props.categories)
                     <NavDropdown.Divider />
                     <NavDropdown.Item eventKey="4.4">Separated link</NavDropdown.Item> */}
                 </NavDropdown>
+                
+                    
+                            <Nav.Item className={!userDetails.id ? 'd-none': ''}>
+                                <Nav.Link eventKey="2" title="Item" href="/upload_article">
+                                    My Articles
+                                </Nav.Link>
+                            </Nav.Item>
+                            <Nav.Item className={!userDetails.id ? 'd-none': ''}>
+                                <Nav.Link eventKey="2" title="Item" href="/upload_article">
+                                    Upload Article
+                                </Nav.Link>
+                            </Nav.Item>
+                        
+                
             </Nav>
     )
 }

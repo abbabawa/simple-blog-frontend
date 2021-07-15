@@ -12,18 +12,22 @@ import Register from './components/Register'
 
 import {useHistory, useParams} from 'react-router-dom'
 
-const headers = {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*',
-                    'Access-Control-Allow-Methods': 'POST',}
-const makePostRequest = async (data, url)=>{
+import user from './User'
+import UploadArticle from './components/UploadArticle'
+
+let headers = {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*',
+                    'Access-Control-Allow-Methods': 'POST', 'Authorization': ''}
+const makePostRequest = async (data, url, headerValues)=>{
     
-    return new Promise((resolve, reject)=>{
+    return new Promise((resolve, reject)=>{console.log(data)
+        headers.Authorization = user.getToken()
 		fetch(url, {
 				method: 'POST',
                 port: 3000,
                 path: '/',
                 
 				body: JSON.stringify(data),
-                headers: headers
+                headers: headerValues
 		}).then((response) =>(
 				response.json().then((res)=>{console.log(res)
 					resolve(res)
@@ -71,19 +75,49 @@ function App(){
         })
     }, [])
 
+    //const [userDetails, setUserDetails] = useState({id: 0, name: ''})
+
     const login = async (data)=>{
-       let res = await makePostRequest(data, '/auth')
+       let res = await makePostRequest(data, '/auth', headers)
        if(res.status){
            headers.Authorization = 'Bearer '+res.accessToken
+           console.log(headers)
+           //setUserDetails({id: res.id, name: res.name})
+           user.setId(res.id)
+           user.setName(res.name)
+           user.setToken('Bearer '+res.accessToken)
            history.push('/')
        }
+    }
+
+    const register = async (data)=>{
+        return new Promise((resolve, reject)=>{
+            makePostRequest(data, '/user').then(res=>{
+                if(res._id){
+                    history.push('/author/'+res._id)
+                    resolve({status: 1})
+                }else{
+                    resolve({status: 0, message: 'Registration was unsuccessfull'})
+                }
+            })
+        })
+        
+    }
+
+    const saveArticle = async (data)=>{
+        data.user = user.getId() 
+        return new Promise((resolve, reject)=>{
+            makePostRequest(data, '/article', headers).then(res=>{
+                resolve(res)
+            })
+        })
     }
 
     const getArticle = async (article)=>{
             return makeGetRequest('/article/'+article)
     }
 
-    const getArticles = async (category)=>{//console.log(articles)
+    const getArticles = async (category='')=>{//console.log(articles)
         if(category){
             return makeGetRequest('/articles/'+category)
         }else{
@@ -93,6 +127,14 @@ function App(){
 
     const changeCategory = (e)=>{
 
+    }
+
+    const getAuthorDetails = async (id)=>{
+        return new Promise((resolve, reject)=>{
+            makeGetRequest('/user/'+id).then(res=>{
+                resolve(res)
+            })
+        })
     }
 
     return (
@@ -111,8 +153,8 @@ function App(){
                         <Route path="/article/:articleId">
                             <Article getArticle={getArticle}  />
                         </Route>
-                        <Route path="/authors">
-                            <Author />
+                        <Route path="/author/:id">
+                            <Author getAuthor={getAuthorDetails} />
                         </Route>
                         <Route exact path="/articles/:category">
                             <Articles articles={getArticles} />
@@ -124,7 +166,10 @@ function App(){
                             <Login login={login} />
                         </Route>
                         <Route path="/register">
-                            <Register />
+                            <Register submit={register} />
+                        </Route>
+                        <Route path="/upload_article">
+                            <UploadArticle submit={saveArticle} categories={categories} />
                         </Route>
                     </Switch>
                 </div>
