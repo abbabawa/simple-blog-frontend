@@ -14,6 +14,7 @@ import {useHistory, useParams} from 'react-router-dom'
 
 import user from './User'
 import UploadArticle from './components/UploadArticle'
+import EditArticle from './components/EditArticle'
 
 let headers = {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*',
                     'Access-Control-Allow-Methods': 'POST', 'Authorization': ''}
@@ -23,6 +24,28 @@ const makePostRequest = async (data, url, headerValues)=>{
         headers.Authorization = user.getToken()
 		fetch(url, {
 				method: 'POST',
+                port: 3000,
+                path: '/',
+                
+				body: JSON.stringify(data),
+                headers: headerValues
+		}).then((response) =>(
+				response.json().then((res)=>{console.log(res)
+					resolve(res)
+				}))
+		).catch(err=>{console.log(err.message)
+				resolve({status:0, message: "An Error occurred while making request, please try again.."})
+				//reject(err)
+		})
+	})
+}
+
+const makePatchRequest = async (data, url, headerValues)=>{
+    
+    return new Promise((resolve, reject)=>{console.log(data)
+        headers.Authorization = user.getToken()
+		fetch(url, {
+				method: 'PATCH',
                 port: 3000,
                 path: '/',
                 
@@ -113,8 +136,16 @@ function App(){
         })
     }
 
+    const updateArticle = async (data)=>{
+        return new Promise((resolve, reject)=>{
+            makePatchRequest(data, '/author/'+user.getId()+'/article/'+data._id, headers).then(res=>{
+                resolve(res)
+            })
+        })
+    }
+
     const getArticle = async (article)=>{
-            return makeGetRequest('/article/'+article)
+        return makeGetRequest('/article/'+article)
     }
 
     const getArticles = async (category='')=>{//console.log(articles)
@@ -122,6 +153,14 @@ function App(){
             return makeGetRequest('/articles/'+category)
         }else{
             return makeGetRequest('/articles')
+        }
+    }
+
+    const getArticlesByAuthor = async (author)=>{//console.log(articles)
+        if(author){
+            return makeGetRequest('/author/articles/'+author)
+        }else{
+            return []
         }
     }
 
@@ -154,7 +193,7 @@ function App(){
                             <Article getArticle={getArticle}  />
                         </Route>
                         <Route path="/author/:id">
-                            <Author getAuthor={getAuthorDetails} />
+                            <Author getAuthor={getAuthorDetails} getArticles={getArticlesByAuthor} />
                         </Route>
                         <Route exact path="/articles/:category">
                             <Articles articles={getArticles} />
@@ -170,6 +209,9 @@ function App(){
                         </Route>
                         <Route path="/upload_article">
                             <UploadArticle submit={saveArticle} categories={categories} />
+                        </Route>
+                        <Route path="/edit_article/:id">
+                            <EditArticle submit={updateArticle} categories={categories} getArticle={getArticle} />
                         </Route>
                     </Switch>
                 </div>

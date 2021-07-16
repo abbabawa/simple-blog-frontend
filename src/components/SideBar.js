@@ -61,7 +61,7 @@ function SideBar(props){
                 
                     
                             <Nav.Item className={!userDetails.id ? 'd-none': ''}>
-                                <Nav.Link eventKey="2" title="Item" href="/upload_article">
+                                <Nav.Link eventKey="2" title="Item" href={`/author/${User.getId()}`}>
                                     My Articles
                                 </Nav.Link>
                             </Nav.Item>
