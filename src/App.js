@@ -64,6 +64,28 @@ const makePatchRequest = async (data, url, headerValues)=>{
 	})
 }
 
+const makeDeleteRequest = async (data, url, headerValues)=>{
+    
+    return new Promise((resolve, reject)=>{console.log(data)
+        headers.Authorization = user.getToken()
+		fetch(url, {
+				method: 'DELETE',
+                port: 3000,
+                path: '/',
+                
+				body: JSON.stringify(data),
+                headers: headerValues
+		}).then((response) =>(
+				response.json().then((res)=>{console.log(res)
+					resolve(res)
+				}))
+		).catch(err=>{console.log(err.message)
+				resolve({status:0, message: "An Error occurred while making request, please try again.."})
+				//reject(err)
+		})
+	})
+}
+
 const makeGetRequest = async (url)=>{
     return new Promise((resolve, reject)=>{
 		fetch(url).then((response) =>(
@@ -146,6 +168,14 @@ function App(){
         })
     }
 
+    const deleteArticle = async (data)=>{
+        return new Promise((resolve, reject)=>{
+            makeDeleteRequest({id: data}, '/author/article/'+data, headers).then(res=>{
+                resolve(res)
+            })
+        })
+    }
+
     const getArticle = async (article)=>{
         return makeGetRequest('/article/'+article)
     }
@@ -219,7 +249,7 @@ function App(){
                             <Article getArticle={getArticle}  />
                         </Route>
                         <Route path="/author/:id">
-                            <Author getAuthor={getAuthorDetails} getArticles={getArticlesByAuthor} />
+                            <Author getAuthor={getAuthorDetails} getArticles={getArticlesByAuthor} deleteArticle={deleteArticle} />
                         </Route>
                         <Route path="/authors">
                             <Authors getAuthors={getAuthors} />

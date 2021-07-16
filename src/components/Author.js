@@ -20,6 +20,13 @@ function Author(props){
         // setArticle(res)
         //console.log(res)
     }, [])
+
+    const deleteArticle = e=>{
+        props.deleteArticle(e.target.id).then(res=>{
+            //refresh component to reflect changes
+            console.log(res)
+        })
+    }
     return (
         <div className="row">
             <div className="offset-md-4 mt-3 mb-5">
@@ -63,7 +70,7 @@ function Author(props){
                                     <td>{article.title}</td>
                                     <td>24th July 2021</td>
                                     <td className={user.getId() === id ? '': 'd-none'}><NavLink to={"/edit_article/"+article._id} className="btn btn-warning">Edit</NavLink></td>
-                                    <td className={user.getId() === id ? '': 'd-none'}><NavLink to="/" className="btn btn-danger">Delete</NavLink></td>
+                                    <td className={user.getId() === id ? '': 'd-none'}><Button onClick={deleteArticle} id={article._id} className="btn btn-danger">Delete</Button></td>
                                 </tr>)
                             })
                         }
