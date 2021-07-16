@@ -39,7 +39,7 @@ function SideBar(props){
                     </Nav.Link>
                 </Nav.Item>
                 <Nav.Item>
-                    <Nav.Link eventKey="2" title="Item">
+                    <Nav.Link eventKey="2" title="Item" href="/authors">
                         Authors
                     </Nav.Link>
                 </Nav.Item>

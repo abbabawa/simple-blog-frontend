@@ -26,7 +26,16 @@ function Header(props){
                         </li>
                     </ul>
                     <ul className={`navbar-nav  ms-auto  ${userDetails.id ? '' : 'd-none'}`}>
-                        <li className="nav-item">{userDetails.name}</li>
+                        <li className="nav-item">
+                            <NavLink class="nav-link" to="/edit_profile">
+                                {userDetails.name}
+                            </NavLink>
+                        </li>
+                        <li className="nav-item">
+                            <NavLink class="nav-link" to="/logout">
+                                Logout
+                            </NavLink>
+                        </li>
                     </ul>
                 </div>
             </div>

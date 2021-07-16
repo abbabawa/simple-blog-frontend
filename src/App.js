@@ -15,6 +15,8 @@ import {useHistory, useParams} from 'react-router-dom'
 import user from './User'
 import UploadArticle from './components/UploadArticle'
 import EditArticle from './components/EditArticle'
+import Authors from './components/Authors'
+import EditProfile from './components/EditProfile'
 
 let headers = {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*',
                     'Access-Control-Allow-Methods': 'POST', 'Authorization': ''}
@@ -176,6 +178,30 @@ function App(){
         })
     }
 
+    const getAuthors = async ()=>{
+        return new Promise((resolve, reject)=>{
+            makeGetRequest('/users').then(res=>{
+                resolve(res)
+            })
+        })
+    }
+
+    const editProfile = (data)=>{
+        return new Promise((resolve, reject)=>{
+            makePatchRequest(data, '/user/'+user.getId(), headers).then(res=>{
+                resolve(res)
+            })
+        })
+    }
+
+    const changePassword = (data)=>{console.log(data)
+        return new Promise((resolve, reject)=>{
+            makePatchRequest(data, '/auth/password', headers).then(res=>{
+                resolve(res)
+            })
+        })
+    }
+
     return (
         <div className="container-fluid px-0">
             <div className="row">
@@ -195,6 +221,9 @@ function App(){
                         <Route path="/author/:id">
                             <Author getAuthor={getAuthorDetails} getArticles={getArticlesByAuthor} />
                         </Route>
+                        <Route path="/authors">
+                            <Authors getAuthors={getAuthors} />
+                        </Route>
                         <Route exact path="/articles/:category">
                             <Articles articles={getArticles} />
                         </Route>
@@ -212,6 +241,9 @@ function App(){
                         </Route>
                         <Route path="/edit_article/:id">
                             <EditArticle submit={updateArticle} categories={categories} getArticle={getArticle} />
+                        </Route>
+                        <Route path="/edit_profile">
+                            <EditProfile submit={editProfile} changePassword={changePassword} getAuthor={getAuthorDetails} changePassword={changePassword} />
                         </Route>
                     </Switch>
                 </div>
