@@ -1,25 +1,12 @@
-import {NavLink} from 'react-router-dom'
-import { Nav } from 'react-bootstrap'
-import { NavDropdown } from 'react-bootstrap'
 import { useParams } from 'react-router'
 
 import User from '../User'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 
-const links = [
-    {
-      id: 1,
-      path: "/",
-      text: "Articles",
-    },
-    {
-      id: 2,
-      path: "/authors",
-      text: "Authors",
-    },
-  ]
+import { Button, Offcanvas, Nav, NavDropdown } from "react-bootstrap";
+import { List } from "react-bootstrap-icons";
 
-  let i = 3
+
 
 function SideBar(props){
     const [userDetails, setUserDetails] = useState({id: User.getId(), name: User.getName()})
@@ -31,49 +18,41 @@ function SideBar(props){
     if(props.categories){
         cats = props.categories
     }
+
+    const [show, setShow] = useState(false);
+
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+
     return (
-            <Nav variant="pills" activeKey="1" className="mt-5 ms-4 flex-column">
-                <Nav.Item>
-                    <Nav.Link eventKey="1" href="/">
-                        Articles
-                    </Nav.Link>
-                </Nav.Item>
-                <Nav.Item>
-                    <Nav.Link eventKey="2" title="Item" href="/authors">
-                        Authors
-                    </Nav.Link>
-                </Nav.Item>
-                <NavDropdown title="Categories" id="nav-dropdown">
-                    { 
-                        cats.map(category=>{
-                            return <NavDropdown.Item>
-                                        <NavLink key={i = (i + 1)} to={"/articles/"+category._id}>{category.name}</NavLink>
-                                    </NavDropdown.Item>
-                        })
-                    }
-                    
-                    {/* <NavDropdown.Item eventKey="4.1">Action</NavDropdown.Item>
-                    <NavDropdown.Item eventKey="4.2">Another action</NavDropdown.Item>
-                    <NavDropdown.Item eventKey="4.3">Something else here</NavDropdown.Item>
-                    <NavDropdown.Divider />
-                    <NavDropdown.Item eventKey="4.4">Separated link</NavDropdown.Item> */}
-                </NavDropdown>
-                
-                    
-                            <Nav.Item className={!userDetails.id ? 'd-none': ''}>
-                                <Nav.Link eventKey="2" title="Item" href={`/author/${User.getId()}`}>
-                                    My Articles
-                                </Nav.Link>
-                            </Nav.Item>
-                            <Nav.Item className={!userDetails.id ? 'd-none': ''}>
-                                <Nav.Link eventKey="2" title="Item" href="/upload_article">
-                                    Upload Article
-                                </Nav.Link>
-                            </Nav.Item>
-                        
-                
-            </Nav>
-    )
+        <>
+            <Button variant="primary" onClick={handleShow} fixed="top" className="d-md-none">
+                Menu
+                <List />
+            </Button>
+
+            <Offcanvas show={show} onHide={handleClose}>
+                <Offcanvas.Header closeButton>
+                    <Offcanvas.Title>Menu</Offcanvas.Title>
+                </Offcanvas.Header>
+                <Offcanvas.Body>
+                    <Nav defaultActiveKey="/" className="flex-column">
+                        <Nav.Link href="/">Articles</Nav.Link>
+                        <Nav.Link eventKey="link-1" href="/authors">Authors</Nav.Link>
+                        <NavDropdown title="Categories" id="nav-dropdown">
+                            { 
+                                cats.map(category=>{
+                                    return <NavDropdown.Item eventKey="4.1" href={"/articles/"+category._id}>{category.name}</NavDropdown.Item>
+                                })
+                            }
+                        </NavDropdown>
+                        <Nav.Link eventKey="link-2" className={!userDetails.id ? 'd-none': ''} href={`/author/${User.getId()}`}>My Articles</Nav.Link>
+                        <Nav.Link eventKey="link-2" className={!userDetails.id ? 'd-none': ''} href="/upload_article">Upload Article</Nav.Link>
+                    </Nav>
+                </Offcanvas.Body>
+            </Offcanvas>
+        </>
+    );
 }
 
 export default SideBar

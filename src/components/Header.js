@@ -1,45 +1,39 @@
-import {NavLink} from 'react-router-dom'
-import { useEffect, useState } from 'react'
+import {Navbar, Container, Nav, NavDropdown} from 'react-bootstrap'
+import { useState } from 'react'
+import {useHistory} from 'react-router-dom'
+import {BoxArrowRight} from 'react-bootstrap-icons'
+
 
 import User from '../User'
 
 function Header(props){
+    const history = useHistory()
     const [userDetails, setUserDetails] = useState({id: sessionStorage.getItem('id'), name: sessionStorage.getItem('name')})
     // useEffect(()=>{
     //     setUserDetails({id: User.getId(), name: User.getName()})
     // }, [])
 
+    const logout = (e)=>{
+        // User.setId(null)
+        // User.setName(null)
+        // history.push('/articles')
+    }
+
     return (
-        <nav className="navbar navbar-expand-lg navbar-light bg-light">
-            <div className="container-fluid">
-                <h2 className="navbar-brand" href="#">Simple Blog FrontEnd</h2>
-                <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-                <span className="navbar-toggler-icon"></span>
-                </button>
-                <div className="collapse navbar-collapse " id="navbarNavDropdown">
-                    <ul className={`navbar-nav  ms-auto ${userDetails.id ? 'd-none': ''}`}>
-                        <li className="nav-item">
-                            <NavLink class="nav-link" to="/login">Login</NavLink>
-                        </li>
-                        <li className="nav-item">
-                            <NavLink class="nav-link" to="/register">Register</NavLink>
-                        </li>
-                    </ul>
-                    <ul className={`navbar-nav  ms-auto  ${userDetails.id ? '' : 'd-none'}`}>
-                        <li className="nav-item">
-                            <NavLink class="nav-link" to="/edit_profile">
-                                {userDetails.name}
-                            </NavLink>
-                        </li>
-                        <li className="nav-item">
-                            <NavLink class="nav-link" to="/logout">
-                                Logout
-                            </NavLink>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
+        <Navbar bg="light" expand="sm">
+            <Container fluid>
+                <Navbar.Brand href="/articles">Simple Blog</Navbar.Brand>
+                <Navbar.Toggle aria-controls="basic-navbar-nav" />
+                <Navbar.Collapse id="basic-navbar-nav">
+                <Nav className="ms-auto">
+                    { !User.getId() ? <Nav.Link href="/register">Register</Nav.Link> : '' }
+                    { !User.getId() ? <Nav.Link href="/login">Login</Nav.Link> : ''}
+                    { User.getId() ? <Nav.Link href={"/author/"+User.getId()}>{User.getName()}</Nav.Link> : ''}
+                    { User.getId() ? <Nav.Link onClick={logout}>Logout <BoxArrowRight /></Nav.Link> : ''}
+                </Nav>
+                </Navbar.Collapse>
+            </Container>
+        </Navbar>
     )
 }
 

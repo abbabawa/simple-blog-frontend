@@ -1,22 +1,24 @@
 import React, {useEffect, useState} from 'react'
-import './bootstrap-5.0.1/css/bootstrap.css'
+import { Col, Container, Row, Nav, Dropdown, NavItem, NavLink } from "react-bootstrap";
+import 'bootstrap/dist/css/bootstrap.min.css';
 import Header from './components/Header'
 import SideBar from './components/SideBar'
-import Articles from './components/Articles'
-import Author from './components/Author'
-import Article from './components/Article'
+import Articles from './pages/Articles'
+import Author from './pages/Author'
+import Article from './pages/Article'
 
 import { Route, Switch } from 'react-router';
-import Login from './components/Login'
-import Register from './components/Register'
+import Login from './pages/Login'
+import Register from './pages/Register'
 
 import {useHistory, useParams} from 'react-router-dom'
 
 import user from './User'
-import UploadArticle from './components/UploadArticle'
-import EditArticle from './components/EditArticle'
-import Authors from './components/Authors'
-import EditProfile from './components/EditProfile'
+import UploadArticle from './pages/UploadArticle'
+import EditArticle from './pages/EditArticle'
+import Authors from './pages/Authors'
+import EditProfile from './pages/EditProfile'
+import Footer from './components/Footer';
 
 let headers = {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*',
                     'Access-Control-Allow-Methods': 'POST', 'Authorization': ''}
@@ -233,54 +235,84 @@ function App(){
     }
 
     return (
-        <div className="container-fluid px-0">
-            <div className="row">
-                <div className="col-12">
-                    <Header />
-                </div>
-            </div>    
-            <div className="row">
-                <div className="col-md-2 border-end">
+        <Container fluid className="">
+            <Row>
+                <Header />
+            </Row>
+            <Row>
+                <Col className="border p-1">
                     <SideBar categories={categories} />
-                </div>
-                <div className="col-md-9">
-                    <Switch>                    
-                        <Route path="/article/:articleId">
-                            <Article getArticle={getArticle}  />
-                        </Route>
-                        <Route path="/author/:id">
-                            <Author getAuthor={getAuthorDetails} getArticles={getArticlesByAuthor} deleteArticle={deleteArticle} />
-                        </Route>
-                        <Route path="/authors">
-                            <Authors getAuthors={getAuthors} />
-                        </Route>
-                        <Route exact path="/articles/:category">
-                            <Articles articles={getArticles} />
-                        </Route>
-                        <Route exact path="/">
-                            <Articles articles={getArticles} />
-                        </Route>
-                        <Route path="/login">
-                            <Login login={login} />
-                        </Route>
-                        <Route path="/register">
-                            <Register submit={register} />
-                        </Route>
-                        <Route path="/upload_article">
-                            <UploadArticle submit={saveArticle} categories={categories} />
-                        </Route>
-                        <Route path="/edit_article/:id">
-                            <EditArticle submit={updateArticle} categories={categories} getArticle={getArticle} />
-                        </Route>
-                        <Route path="/edit_profile">
-                            <EditProfile submit={editProfile} changePassword={changePassword} getAuthor={getAuthorDetails} changePassword={changePassword} />
-                        </Route>
-                    </Switch>
-                </div>
-            </div>
-            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossOrigin="anonymous"></script>
-        </div>
-    )
+                    <div className="d-none d-md-block">
+                        <Nav variant="" className="justify-content-center" defaultActiveKey="/home">
+                            <Nav.Item>
+                                <Nav.Link href="/">Articles</Nav.Link>
+                            </Nav.Item>
+                            <Nav.Item>
+                                <Nav.Link eventKey="link-1" href="/authors">Authors</Nav.Link>
+                            </Nav.Item>
+                            <Dropdown as={NavItem}>
+                                <Dropdown.Toggle as={NavLink}>Categories</Dropdown.Toggle>
+                                <Dropdown.Menu>
+                                    { 
+                                        categories.map(category=>{
+                                            return <Dropdown.Item href={"/articles/"+category._id}>{category.name}</Dropdown.Item>
+                                        })
+                                    }
+                                </Dropdown.Menu>
+                            </Dropdown>
+                            <Nav.Item>
+                                <Nav.Link className={!user.getId() ? 'd-none': ''} href={`/author/${user.getId()}`}>My Articles</Nav.Link>
+                            </Nav.Item>
+                            <Nav.Item>
+                                <Nav.Link className={!user.getId() ? 'd-none': ''} href="/upload_article">Upload Article</Nav.Link>
+                            </Nav.Item>
+                        </Nav>
+                    </div>
+                </Col>
+            </Row>
+            <Row>
+                        <Switch>                    
+                            <Route path="/article/:articleId">
+                                <Article getArticle={getArticle}  />
+                            </Route>
+                            <Route path="/author/:id">
+                                <Author getAuthor={getAuthorDetails} getArticles={getArticlesByAuthor} deleteArticle={deleteArticle} />
+                            </Route>
+                            <Route path="/authors">
+                                <Authors getAuthors={getAuthors} />
+                            </Route>
+                            <Route exact path="/articles/:category">
+                                <Articles articles={getArticles} />
+                            </Route>
+                            <Route exact path="/">
+                                <Articles articles={getArticles} />
+                            </Route>
+                            <Route path="/login">
+                                <Login login={login} />
+                            </Route>
+                            <Route path="/register">
+                                <Register submit={register} />
+                            </Route>
+                            <Route path="/upload_article">
+                                <UploadArticle submit={saveArticle} categories={categories} />
+                            </Route>
+                            <Route path="/edit_article/:id">
+                                <EditArticle submit={updateArticle} categories={categories} getArticle={getArticle} />
+                            </Route>
+                            <Route path="/edit_profile">
+                                <EditProfile submit={editProfile} changePassword={changePassword} getAuthor={getAuthorDetails} changePassword={changePassword} />
+                            </Route>
+                            <Route exact path="/articles">
+                                <Articles articles={getArticles} />
+                            </Route>
+                        </Switch>
+                   
+            </Row>
+            <Row className="bg-light mt-5 p-4">
+                <Footer />
+            </Row>
+        </Container>
+      );
 }
 
 export default App
